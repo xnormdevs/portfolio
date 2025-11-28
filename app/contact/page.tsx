@@ -7,7 +7,7 @@ import { Card } from "../components/card";
 const socials = [
 	{
 		icon: <Twitter size={20} />,
-		href: "https://twitter.com/xnorm",
+		href: "https://x.com/Xnorm2024",
 		label: "Twitter",
 		handle: "@xnorm",
 	},
@@ -19,7 +19,7 @@ const socials = [
 	},
 	{
 		icon: <Github size={20} />,
-		href: "https://github.com/xnorm",
+		href: "https://github.com/xnormdevs",
 		label: "Github",
 		handle: "xnorm",
 	},

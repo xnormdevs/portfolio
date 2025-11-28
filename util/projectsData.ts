@@ -74,7 +74,7 @@ This project showcases advanced architecture, multi-API integration, database op
 
     {
         slug: "toolgenie-website",
-        title: "ToolGenie Landing Page",
+        title: "ToolGenie Landing",
         description:
             "A sleek, modern landing site for ToolGenie, built for speed, SEO, and brand presence.",
         date: "2024-11-15",

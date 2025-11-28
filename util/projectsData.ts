@@ -2,11 +2,11 @@ export type Project = {
   slug: string;
   title: string;
   description: string;
-  date?: string; // ISO string
+  date?: string;
   published: boolean;
   url?: string;
   repository?: string;
-  content?: string; // simple content to render on detail page
+  content?: string;
 };
 
 export const projects: Project[] = [

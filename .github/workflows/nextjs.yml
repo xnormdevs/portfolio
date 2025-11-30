@@ -21,58 +21,51 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Detect pnpm
-      - name: Detect package manager
-        id: detect-package-manager
-        run: |
-          if [ -f "${{ github.workspace }}/pnpm-lock.yaml" ]; then
-            echo "manager=pnpm" >> $GITHUB_OUTPUT
-            echo "command=install" >> $GITHUB_OUTPUT
-            echo "runner=pnpm exec" >> $GITHUB_OUTPUT
-            exit 0
-          else
-            echo "No pnpm-lock.yaml found. This workflow is configured for pnpm only."
-            exit 1
-          fi
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: "pnpm"
-
+      # Install pnpm (MUST be done before use)
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 9 # or your version
+          version: 9 # or your preferred version
 
-      - name: Setup pnpm store cache
+      # Setup Node with pnpm caching enabled
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      # Cache pnpm store
+      - name: Cache pnpm store
         uses: actions/cache@v4
         with:
           path: ~/.local/share/pnpm/store
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
-            ${{ runner.os }}-pnpm-store-
+            ${{ runner.os }}-pnpm-
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
         with:
           static_site_generator: next
 
+      # Cache Next.js build cache
       - name: Restore Next.js cache
         uses: actions/cache@v4
         with:
           path: .next/cache
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.[jt]s', '**/*.[jt]sx') }}
           restore-keys: |
             ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-
 
+      # Install deps
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # Build Next.js
       - name: Build with Next.js
         run: pnpm exec next build
 
+      # Upload static output (./out created by next export)
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
